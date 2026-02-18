@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: locker-postgres
+    environment:
+      POSTGRES_DB: locker_db
+      POSTGRES_USER: locker_user
+      POSTGRES_PASSWORD: locker_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - locker-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U locker_user -d locker_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: locker-backend
+    ports:
+      - "8090:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/locker_db
+      SPRING_DATASOURCE_USERNAME: locker_user
+      SPRING_DATASOURCE_PASSWORD: locker_pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - locker-network
+
+  adminer:
+    image: adminer:latest
+    container_name: locker-adminer
+    ports:
+      - "8081:8080"
+    networks:
+      - locker-network
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+
+networks:
+  locker-network:
+    driver: bridge

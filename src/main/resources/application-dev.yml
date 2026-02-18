@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/locker_db
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    com.servientrega.locker: DEBUG

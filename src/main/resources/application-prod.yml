@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    com.servientrega.locker: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN

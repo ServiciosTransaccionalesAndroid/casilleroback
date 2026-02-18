@@ -1,0 +1,118 @@
+# GUÍA RÁPIDA - Comandos para Copiar y Pegar
+
+## 1. HEALTH CHECK
+curl http://localhost:8080/api/health
+
+## 2. LOGIN (Guarda el token que te devuelve)
+curl -X POST http://localhost:8080/api/auth/courier/login \
+  -H "Content-Type: application/json" \
+  -d '{"employeeId": "COUR001", "pin": "1234"}'
+
+## 3. GUARDAR TOKEN (Reemplaza con tu token real)
+TOKEN="TU_TOKEN_AQUI"
+
+## 4. VALIDAR PAQUETE (Público - no requiere token)
+curl "http://localhost:8080/api/packages/validate?trackingNumber=SRV123456789"
+
+## 5. VER COMPARTIMENTOS (Requiere token)
+curl http://localhost:8080/api/lockers/1/compartments \
+  -H "Authorization: Bearer $TOKEN"
+
+## 6. REGISTRAR DEPÓSITO (Requiere token - Guarda el código de retiro)
+curl -X POST http://localhost:8080/api/deposits \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "trackingNumber": "SRV123456789",
+    "lockerId": 1,
+    "compartmentId": 5,
+    "courierId": 1
+  }'
+
+## 7. GUARDAR CÓDIGO DE RETIRO (Reemplaza con tu código real)
+CODE="TU_CODIGO_AQUI"
+
+## 8. VALIDAR CÓDIGO DE RETIRO (Público)
+curl "http://localhost:8080/api/retrievals/validate?code=$CODE"
+
+## 9. PROCESAR RETIRO (Público)
+curl -X POST http://localhost:8080/api/retrievals \
+  -H "Content-Type: application/json" \
+  -d "{\"code\": \"$CODE\"}"
+
+## 10. VER MÉTRICAS OPERACIONALES (Requiere token)
+curl http://localhost:8080/api/metrics/operational \
+  -H "Authorization: Bearer $TOKEN"
+
+## 11. VER MÉTRICAS DEL LOCKER (Requiere token)
+curl http://localhost:8080/api/metrics/locker/1 \
+  -H "Authorization: Bearer $TOKEN"
+
+## 12. VER ESTADO DEL LOCKER (Requiere token)
+curl http://localhost:8080/api/lockers/1/status \
+  -H "Authorization: Bearer $TOKEN"
+
+## 13. SIMULAR MANTENIMIENTO (Público)
+curl -X POST http://localhost:8080/api/lockers/status-update \
+  -H "Content-Type: application/json" \
+  -d '{
+    "lockerId": 1,
+    "compartmentId": 6,
+    "previousState": "DISPONIBLE",
+    "currentState": "MANTENIMIENTO",
+    "timestamp": "2024-01-15T10:30:00",
+    "sensorReadings": {
+      "sensor1": true,
+      "sensor2": false,
+      "sensor3": false,
+      "sensor4": false,
+      "infrared": true,
+      "error": true
+    }
+  }'
+
+## 14. VER ALERTAS (Requiere token)
+curl http://localhost:8080/api/alerts/locker/1 \
+  -H "Authorization: Bearer $TOKEN"
+
+## 15. RESOLVER ALERTA (Requiere token - Reemplaza {id} con el ID de la alerta)
+curl -X PUT http://localhost:8080/api/alerts/1/resolve \
+  -H "Authorization: Bearer $TOKEN"
+
+## COMANDOS ÚTILES
+
+# Ver logs en tiempo real
+docker-compose logs -f backend
+
+# Reiniciar backend
+docker-compose restart backend
+
+# Detener todo
+docker-compose down
+
+# Limpiar y reiniciar
+docker-compose down -v && docker-compose up -d --build
+
+# Ver estado de contenedores
+docker-compose ps
+
+## DATOS DE PRUEBA
+
+Mensajeros:
+- COUR001 / PIN: 1234 (Juan Pérez)
+- COUR002 / PIN: 1234 (María González)
+
+Paquetes:
+- SRV123456789 (Carlos Rodríguez)
+- SRV987654321 (Ana Martínez)
+- SRV555666777 (Pedro Sánchez)
+
+Lockers:
+- Locker 1: Centro Comercial Andino
+- Locker 2: Centro Comercial Unicentro
+
+## URLS IMPORTANTES
+
+Swagger UI: http://localhost:8080/swagger-ui.html
+Adminer (BD): http://localhost:8081
+Health Check: http://localhost:8080/api/health

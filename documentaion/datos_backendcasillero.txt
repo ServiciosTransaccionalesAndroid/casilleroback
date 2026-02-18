@@ -1,0 +1,109 @@
+5. CAPA 3: BACKEND SERVIENTREGA
+5.1 Descripción General
+API REST desarrollada en la infraestructura de Servientrega. Centraliza la información,
+coordina operaciones entre múltiples lockers y proporciona servicios de valor agregado.
+5.2 Responsabilidades Principales y Recomendaciones
+1. Validación de Paquetes
+Verificación de número de guía, validación de destinatario, consulta a ERP de Servientrega
+2. Generación de Códigos de Retiro
+Códigos únicos alfanuméricos de 6-8 caracteres, vigencia temporal (24-72 horas)
+3. Registro de Histórico
+Almacenamiento de cambios de estado, registro de operaciones con timestamps, auditoría
+completa
+4. Notificaciones
+SMS al destinatario con código de retiro, email con instrucciones, alertas de vencimiento
+5. Dashboard y Reportes
+Monitoreo en tiempo real de todos los lockers, métricas de operación, reportes gerenciales
+6. Integración con ERP
+Actualización de estado de guías, sincronización de información, trazabilidad completa
+7. Gestión de Alertas
+Detección de casilleros en mantenimiento, notificación a técnicos, tickets automáticos
+5.3 Tecnologías Recomendadas
+• Lenguaje: Node.js / Java / .NET (según estándar Servientrega)
+• Base de Datos: PostgreSQL / SQL Server
+• Caché: Redis para sesiones y tokens
+• Notificaciones: AWS SNS / Twilio para SMS
+
+6.3 Flujo de Detección y Reporte
+Paso 1: Detección (Software Propietario)
+Ciclo continuo cada 500ms que consulta los 4 pares de sensores y el sensor infrarrojo,
+determina el estado actual y lo compara con el estado anterior. Si detecta un cambio,
+procede al Paso 2.
+Paso 2: Reporte (Software Propietario → Backend)
+Envía POST a /api/lockers/status-update con: lockerId, previousState, currentState,
+timestamp, sensorReadings
+Paso 3: Registro (Backend)
+Valida el reporte, almacena en base de datos, actualiza dashboard, genera alertas si estado
+= MANTENIMIENTO
+
+7. FLUJOS DE PROCESO DETALLADOS
+7.1 Flujo de Depósito de Paquete
+Participantes
+• Mensajero de Servientrega
+• Software Propietario (Locker)
+• Backend Servientrega
+• Cliente (Destinatario)
+Pasos del Flujo
+1. Inicio de Sesión del Mensajero
+El mensajero ingresa su credencial en la pantalla táctil del locker. El Software Propietario
+valida credenciales contra Backend.
+2. Escaneo de Paquete
+El mensajero escanea el código de barras/QR del paquete. El Software Propietario lee el
+código vía RS232.
+3. Validación de Paquete
+Si hay conectividad: El Software consulta al Backend (GET
+/api/packages/validate?trackingNumber=XXX). El Backend verifica en ERP que el paquete
+existe, está en tránsito, responde tamaño y datos necesarios para operación.
+4. Asignación Inteligente de Casillero
+El Software Propietario analiza las dimensiones del paquete (consultadas del backend).
+Consulta su caché local de casilleros disponibles. Ejecuta algoritmo de asignación
+inteligente que selecciona el casillero más adecuado según tamaño. Optimiza el uso de
+espacio disponible.
+5. Apertura de Casillero
+El Software envía comando de apertura a la cerradura vía RS485. El sensor infrarrojo
+detecta que la puerta se abre. El estado cambia temporalmente a ABIERTO.
+6. Depósito Físico
+El mensajero coloca el paquete en el casillero. Cierra la puerta..
+7. Detección de Paquete
+Los 4 pares de sensores detectan el paquete (4 sensores = true). El sensor infrarrojo
+confirma puerta cerrada. El estado cambia de DISPONIBLE a OCUPADO.
+8. Registro en Backend
+Si online: El Software envía POST /api/deposits con: trackingNumber, lockerId, timestamp,
+photo. El Backend genera código de retiro único (ej: ABC123), almacena operación en DB.
+Si offline: Operación se guarda en caché local para sincronización posterior.
+9. Notificación al Cliente
+El Backend envía SMS/Email al destinatario con: código de retiro, ubicación del locker,
+vigencia del código, instrucciones de retiro.
+10. Actualización ERP
+El Backend actualiza el estado de la guía en el ERP de Servientrega a 'EN LOCKER'
+
+7.2 Flujo de Retiro de Paquete
+Participantes
+• Cliente (Destinatario)
+• Software Propietario (Locker)
+• Backend Servientrega
+Pasos del Flujo
+1. Ingreso de Código
+El cliente ingresa el código de retiro (ej: ABC123) en la pantalla táctil. Opcionalmente puede
+escanear QR del SMS/Email.
+2. Validación de Código
+Si online: Software consulta GET /api/retrievals/validate?code=ABC123. Backend verifica
+código válido, no expirado, no usado. Si offline: Valida contra caché local.
+3. Identificación de Casillero
+El Backend/caché devuelve el lockerId asociado al código. El Software identifica el casillero
+físico.
+4. Apertura de Casillero
+El Software envía comando de apertura a la cerradura vía RS485. El sensor infrarrojo
+detecta puerta abierta. El estado cambia a ABIERTO.
+5. Retiro Físico
+El cliente retira el paquete. Cierra la puerta.
+6. Detección de Retiro
+Los 4 pares de sensores detectan ausencia de paquete (4 sensores = false). El sensor
+infrarrojo confirma puerta cerrada. El estado cambia de OCUPADO a DISPONIBLE.
+7. Registro en Backend
+Si online: Software envía POST /api/retrievals con: code, lockerId, timestamp, photo.
+Backend marca código como usado, registra operación. Si offline: Guarda en caché local.
+8. Actualización ERP
+El Backend actualiza el estado de la guía en el ERP a 'ENTREGADO'
+9. Confirmación al Cliente
+El Backend envía SMS/Email de confirmación de entrega
