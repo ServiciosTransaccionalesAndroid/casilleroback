@@ -23,6 +23,7 @@ public class RetrievalService {
     private final CompartmentService compartmentService;
     private final PackageService packageService;
     private final NotificationService notificationService;
+    private final OperationLogService operationLogService;
 
     public RetrievalCode validateRetrievalCode(String code) {
         log.info("Validating retrieval code: {}", code);
@@ -46,6 +47,9 @@ public class RetrievalService {
 
         Retrieval savedRetrieval = retrievalRepository.save(retrieval);
         log.info("Retrieval saved with ID: {}", savedRetrieval.getId());
+
+        // Registrar operación en histórico
+        operationLogService.logRetrieval(savedRetrieval);
 
         retrievalCodeService.markAsUsed(code);
 

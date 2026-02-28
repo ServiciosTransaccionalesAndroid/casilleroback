@@ -1,0 +1,15 @@
+"Reporte: OCCUPANCY_RATE","Período: 2026-02-28 a 2026-02-28","Generado: 2026-02-28T15:44:44.962275356"
+
+"RESUMEN"
+"available","10"
+"occupancyRate","16.67"
+"totalCompartments","12"
+"occupied","2"
+
+"DATOS DETALLADOS"
+"BYSIZE"
+"total","size","available","occupied"
+"4","LARGE","3","1"
+"4","MEDIUM","3","1"
+"4","SMALL","4","0"
+

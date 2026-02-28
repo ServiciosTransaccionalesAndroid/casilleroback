@@ -15,6 +15,7 @@ public class PackageService {
 
     private final PackageRepository packageRepository;
     private final ErpSimulatorService erpSimulatorService;
+    private final OperationLogService operationLogService;
 
     @Transactional
     public Package validatePackage(String trackingNumber) {
@@ -55,8 +56,12 @@ public class PackageService {
         Package packageEntity = packageRepository.findByTrackingNumber(trackingNumber)
             .orElseThrow(() -> new RuntimeException("Package not found: " + trackingNumber));
         
+        PackageStatus oldStatus = packageEntity.getStatus();
         packageEntity.setStatus(status);
         packageRepository.save(packageEntity);
+        
+        // Registrar cambio de estado en histórico
+        operationLogService.logStatusChange(packageEntity, oldStatus, status);
         
         erpSimulatorService.updatePackageStatus(trackingNumber, status);
         log.info("Package status updated successfully");

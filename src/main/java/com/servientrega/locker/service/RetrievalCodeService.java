@@ -18,7 +18,9 @@ import java.time.LocalDateTime;
 public class RetrievalCodeService {
 
     private final RetrievalCodeRepository retrievalCodeRepository;
+    private final OperationLogService operationLogService;
     private static final String CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    private static final String CODE_PREFIX = "RCSV"; // Prefijo fijo para identificar códigos de retiro (Random Code Servientrega)
     private static final SecureRandom RANDOM = new SecureRandom();
 
     @Value("${app.retrieval-code.length:8}")
@@ -58,8 +60,10 @@ public class RetrievalCodeService {
     }
 
     private String generateRandomCode() {
-        StringBuilder code = new StringBuilder(codeLength);
-        for (int i = 0; i < codeLength; i++) {
+        // Genera código con prefijo RCSV + 4 caracteres aleatorios (total 8)
+        StringBuilder code = new StringBuilder(CODE_PREFIX);
+        int randomLength = codeLength - CODE_PREFIX.length();
+        for (int i = 0; i < randomLength; i++) {
             code.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
         }
         return code.toString();
@@ -89,9 +93,37 @@ public class RetrievalCodeService {
 
         if (LocalDateTime.now().isAfter(retrievalCode.getExpiresAt())) {
             log.warn("Retrieval code expired: {}", code);
+            
+            // Registrar código expirado en histórico
+            java.util.Map<String, Object> metadata = new java.util.HashMap<>();
+            metadata.put("code", code);
+            metadata.put("expiresAt", retrievalCode.getExpiresAt().toString());
+            operationLogService.logOperation(
+                com.servientrega.locker.enums.OperationType.CODE_EXPIRED,
+                com.servientrega.locker.enums.EntityType.RETRIEVAL_CODE,
+                retrievalCode.getId(),
+                "Código de retiro " + code + " expiró sin ser usado",
+                "SYSTEM",
+                null,
+                metadata
+            );
             return null;
         }
 
+        // Registrar validación exitosa
+        java.util.Map<String, Object> metadata = new java.util.HashMap<>();
+        metadata.put("code", code);
+        metadata.put("trackingNumber", retrievalCode.getDeposit().getPackageEntity().getTrackingNumber());
+        operationLogService.logOperation(
+            com.servientrega.locker.enums.OperationType.CODE_VALIDATED,
+            com.servientrega.locker.enums.EntityType.RETRIEVAL_CODE,
+            retrievalCode.getId(),
+            "Código de retiro " + code + " validado exitosamente",
+            "CLIENT",
+            null,
+            metadata
+        );
+        
         log.info("Retrieval code valid: {}", code);
         return retrievalCode;
     }

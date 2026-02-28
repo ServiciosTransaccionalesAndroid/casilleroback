@@ -1,0 +1,14 @@
+"Reporte: DEPOSITS_BY_PERIOD","Período: 2024-01-01 a 2026-12-31","Generado: 2026-02-28T15:49:14.012284338"
+
+"RESUMEN"
+"totalDeposits","8"
+"averagePerDay","8.0"
+"daysWithData","1"
+"peakDay","2026-02-28"
+"peakDayCount","8"
+
+"DATOS DETALLADOS"
+"DAILY"
+"date","count"
+"2026-02-28","8"
+

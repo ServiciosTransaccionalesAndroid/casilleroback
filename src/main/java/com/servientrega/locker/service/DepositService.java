@@ -24,6 +24,8 @@ public class DepositService {
     private final CourierRepository courierRepository;
     private final RetrievalCodeService retrievalCodeService;
     private final NotificationService notificationService;
+    private final EmailService emailService;
+    private final OperationLogService operationLogService;
 
     @Transactional
     public DepositResult processDeposit(String trackingNumber, Long compartmentId, Long courierId, String photoUrl) {
@@ -55,6 +57,10 @@ public class DepositService {
 
         RetrievalCode retrievalCode = retrievalCodeService.generateCode(savedDeposit);
 
+        // Registrar operación en histórico
+        operationLogService.logDeposit(savedDeposit, courier);
+        operationLogService.logCodeGeneration(retrievalCode, savedDeposit);
+
         compartmentService.updateCompartmentStatus(compartmentId, CompartmentStatus.OCUPADO);
         packageService.updatePackageStatus(trackingNumber, PackageStatus.EN_LOCKER);
 
@@ -66,6 +72,16 @@ public class DepositService {
             compartment.getLocker().getName(),
             compartment.getLocker().getAddress(),
             retrievalCode.getExpiresAt()
+        );
+
+        // Enviar correo con QR
+        emailService.sendRetrievalCodeEmail(
+            retrievalCode,
+            packageEntity.getRecipientEmail(),
+            packageEntity.getRecipientName(),
+            trackingNumber,
+            compartment.getLocker().getName(),
+            compartment.getLocker().getAddress()
         );
 
         log.info("Deposit processed successfully - Code: {}", retrievalCode.getCode());
