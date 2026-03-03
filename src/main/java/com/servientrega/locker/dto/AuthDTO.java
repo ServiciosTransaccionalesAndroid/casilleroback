@@ -9,6 +9,10 @@ public class AuthDTO {
         String employeeId,
         
         @NotBlank(message = "PIN is required")
+        @jakarta.validation.constraints.Pattern(
+            regexp = "^[0-9]{4,6}$",
+            message = "PIN must be 4-6 digits"
+        )
         String pin
     ) {}
 

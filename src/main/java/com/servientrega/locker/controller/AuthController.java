@@ -34,10 +34,9 @@ public class AuthController {
             throw new RuntimeException("Courier is inactive");
         }
 
-        // TODO: Restaurar validación de PIN
-        // if (!passwordEncoder.matches(request.pin(), courier.getPin())) {
-        //     throw new RuntimeException("Invalid credentials");
-        // }
+        if (!passwordEncoder.matches(request.pin(), courier.getPin())) {
+            throw new RuntimeException("Invalid PIN");
+        }
 
         String token = jwtService.generateToken(courier.getEmployeeId());
 
