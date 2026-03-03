@@ -3,6 +3,8 @@ package com.servientrega.locker.service;
 import com.servientrega.locker.entity.Compartment;
 import com.servientrega.locker.enums.CompartmentSize;
 import com.servientrega.locker.enums.CompartmentStatus;
+import com.servientrega.locker.enums.DoorState;
+import com.servientrega.locker.enums.PhysicalCondition;
 import com.servientrega.locker.repository.CompartmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,5 +93,26 @@ public class CompartmentService {
     public List<Compartment> getCompartmentsByLocker(Long lockerId) {
         log.info("Getting all compartments for locker: {}", lockerId);
         return compartmentRepository.findByLockerId(lockerId);
+    }
+
+    @Transactional
+    public void updateDoorState(Long compartmentId, DoorState doorState) {
+        Compartment compartment = compartmentRepository.findById(compartmentId)
+            .orElseThrow(() -> new RuntimeException("Compartment not found"));
+        compartment.setDoorState(doorState);
+        compartmentRepository.save(compartment);
+    }
+
+    @Transactional
+    public void updatePhysicalCondition(Long compartmentId, PhysicalCondition condition) {
+        Compartment compartment = compartmentRepository.findById(compartmentId)
+            .orElseThrow(() -> new RuntimeException("Compartment not found"));
+        compartment.setPhysicalCondition(condition);
+        compartmentRepository.save(compartment);
+    }
+
+    public Compartment getCompartmentById(Long compartmentId) {
+        return compartmentRepository.findById(compartmentId)
+            .orElseThrow(() -> new RuntimeException("Compartment not found"));
     }
 }
