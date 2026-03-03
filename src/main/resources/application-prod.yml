@@ -8,7 +8,9 @@ spring:
     hibernate:
       ddl-auto: validate
   flyway:
-    enabled: false
+    enabled: true
+    ignore-missing-migrations: true
+    out-of-order: true
 
 server:
   port: ${PORT:8080}
