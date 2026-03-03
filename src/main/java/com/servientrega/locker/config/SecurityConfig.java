@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/auth/**",
                     "/api/health",
+                    "/api/dashboard/**",
                     "/api/qr/**",
                     "/api/packages/validate",
                     "/api/deposits",
@@ -47,10 +48,10 @@ public class SecurityConfig {
                     "/api/lockers/status-update",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
-                    "/v3/api-docs/**",
+                    "/api/v3/api-docs/**",
                     "/v3/api-docs"
                 ).permitAll()
-                .requestMatchers("/api/couriers/**", "/api/recipients/**", "/api/packages/**", "/api/lockers/**", "/api/util/**").hasRole("ADMIN")
+                .requestMatchers("/api/couriers/**", "/api/recipients/**", "/api/packages/**", "/api/lockers/**", "/api/activity/**", "/api/util/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
