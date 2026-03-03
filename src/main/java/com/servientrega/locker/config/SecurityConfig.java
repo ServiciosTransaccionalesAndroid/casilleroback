@@ -41,6 +41,8 @@ public class SecurityConfig {
                     "/api/health",
                     "/api/dev/**",
                     "/api/couriers/**",
+                    "/api/recipients/**",
+                    "/api/packages/**",
                     "/api/qr/**",
                     "/api/packages/validate",
                     "/api/retrievals/validate",

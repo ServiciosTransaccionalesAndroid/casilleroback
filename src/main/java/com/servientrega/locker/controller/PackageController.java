@@ -1,47 +1,57 @@
 package com.servientrega.locker.controller;
 
-import com.servientrega.locker.dto.PackageValidationResponse;
-import com.servientrega.locker.entity.Package;
+import com.servientrega.locker.dto.PackageDTO;
 import com.servientrega.locker.service.PackageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/packages")
 @RequiredArgsConstructor
-@Tag(name = "Packages", description = "Package validation endpoints")
+@Tag(name = "Packages", description = "Package management endpoints")
 public class PackageController {
 
     private final PackageService packageService;
 
-    @GetMapping("/validate")
-    @Operation(summary = "Validate package", description = "Validates a package by tracking number against ERP")
-    public ResponseEntity<PackageValidationResponse> validatePackage(
-            @RequestParam String trackingNumber) {
-        
-        Package pkg = packageService.validatePackage(trackingNumber);
-        
-        if (pkg == null) {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping
+    @Operation(summary = "Create package", description = "Create a new package")
+    public ResponseEntity<PackageDTO.PackageResponse> create(
+            @Valid @RequestBody PackageDTO.CreateRequest request) {
+        PackageDTO.PackageResponse response = packageService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
-        PackageValidationResponse response = new PackageValidationResponse(
-            pkg.getTrackingNumber(),
-            pkg.getRecipientName(),
-            pkg.getRecipientPhone(),
-            pkg.getRecipientEmail(),
-            new PackageValidationResponse.PackageDimensions(
-                pkg.getWidth(),
-                pkg.getHeight(),
-                pkg.getDepth(),
-                pkg.getWeight()
-            ),
-            pkg.getStatus().name()
-        );
+    @GetMapping
+    @Operation(summary = "List all packages", description = "Get all packages")
+    public ResponseEntity<List<PackageDTO.PackageResponse>> getAll() {
+        return ResponseEntity.ok(packageService.getAll());
+    }
 
-        return ResponseEntity.ok(response);
+    @GetMapping("/{id}")
+    @Operation(summary = "Get package", description = "Get package by ID")
+    public ResponseEntity<PackageDTO.PackageResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(packageService.getById(id));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update package", description = "Update package information")
+    public ResponseEntity<PackageDTO.PackageResponse> update(
+            @PathVariable Long id,
+            @Valid @RequestBody PackageDTO.UpdateRequest request) {
+        return ResponseEntity.ok(packageService.update(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete package", description = "Delete package by ID")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        packageService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
