@@ -8,14 +8,17 @@ Se actualizó la seguridad para proteger endpoints administrativos. Ahora requie
 
 ## ✅ Endpoints PÚBLICOS (Sin autenticación)
 
-| Endpoint | Descripción | Uso |
-|----------|-------------|-----|
+| Endpoint | Descripción | Usado por |
+|----------|-------------|----------|
 | `POST /api/auth/admin/login` | Login administrador | Portal web |
 | `POST /api/auth/courier/login` | Login mensajero | App móvil |
 | `GET /api/health` | Health check | Monitoreo |
 | `GET /api/qr/**` | Códigos QR | Cliente final |
+| `GET /api/packages/validate?trackingNumber={number}` | Validar paquete | App móvil courier |
+| `POST /api/deposits` | Registrar depósito | App móvil courier |
 | `GET /api/retrievals/validate?code={code}` | Validar código retiro | Locker físico |
 | `POST /api/retrievals` | Registrar retiro | Locker físico |
+| `POST /api/lockers/status-update` | Actualizar estado locker | Locker físico (hardware) |
 | `GET /swagger-ui/**` | Documentación API | Desarrollo |
 
 ---
@@ -38,7 +41,7 @@ Se actualizó la seguridad para proteger endpoints administrativos. Ahora requie
 | `/api/recipients/{id}` | PUT | Actualizar cliente |
 | `/api/recipients/{id}` | DELETE | Eliminar cliente |
 
-### Gestión de Paquetes
+### Gestión de Paquetes (Portal Admin)
 | Endpoint | Método | Descripción |
 |----------|--------|-------------|
 | `/api/packages` | GET | Listar paquetes |
@@ -46,21 +49,19 @@ Se actualizó la seguridad para proteger endpoints administrativos. Ahora requie
 | `/api/packages/{id}` | GET | Ver paquete |
 | `/api/packages/{id}` | PUT | Actualizar paquete |
 | `/api/packages/{id}` | DELETE | Eliminar paquete |
-| `/api/packages/validate` | GET | Validar tracking |
 
-### Gestión de Lockers
+### Gestión de Lockers (Portal Admin)
 | Endpoint | Método | Descripción |
 |----------|--------|-------------|
 | `/api/lockers` | GET | Listar lockers |
 | `/api/lockers/{id}` | GET | Ver locker |
 | `/api/lockers/{id}/compartments` | GET | Ver compartimentos |
 | `/api/lockers/{id}/status` | GET | Ver estado |
-| `/api/lockers/status-update` | POST | Actualizar estado |
 
-### Depósitos
+### Depósitos (Portal Admin)
 | Endpoint | Método | Descripción |
 |----------|--------|-------------|
-| `/api/deposits` | POST | Registrar depósito |
+| `/api/deposits` | GET | Listar depósitos |
 
 ### Utilidades (Solo desarrollo)
 | Endpoint | Método | Descripción |
@@ -127,9 +128,9 @@ const couriers = await api('/api/couriers')
 - [ ] Agregar token a todas las llamadas de deposits
 
 ### App Móvil Courier
-- [ ] Login funciona
-- [ ] Agregar token a depósitos
-- [ ] Agregar token a actualización de estado
+- ✅ No requiere cambios (endpoints públicos)
+- `/api/packages/validate` - Público
+- `/api/deposits` - Público
 
 ### Locker Físico
 - ✅ No requiere cambios (endpoints públicos)
