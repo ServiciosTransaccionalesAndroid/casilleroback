@@ -25,43 +25,19 @@ Se actualizó la seguridad para proteger endpoints administrativos. Ahora requie
 
 ## 🔒 Endpoints PROTEGIDOS (Requieren JWT)
 
-### Gestión de Empleados
+### Solo ADMIN
 | Endpoint | Método | Descripción |
 |----------|--------|-------------|
-| `/api/couriers` | GET | Listar empleados |
-| `/api/couriers` | POST | Crear empleado |
-| `/api/couriers/{id}` | PUT | Actualizar empleado |
-| `/api/couriers/{id}` | DELETE | Eliminar empleado |
+| `/api/couriers/**` | ALL | Gestión empleados |
+| `/api/recipients/**` | ALL | Gestión clientes |
+| `/api/packages/**` | ALL | Gestión paquetes (CRUD) |
+| `/api/lockers/**` | ALL | Gestión lockers |
+| `/api/util/**` | ALL | Utilidades desarrollo |
 
-### Gestión de Clientes
+### ADMIN + COURIER
 | Endpoint | Método | Descripción |
 |----------|--------|-------------|
-| `/api/recipients` | GET | Listar clientes |
-| `/api/recipients` | POST | Crear cliente |
-| `/api/recipients/{id}` | PUT | Actualizar cliente |
-| `/api/recipients/{id}` | DELETE | Eliminar cliente |
-
-### Gestión de Paquetes (Portal Admin)
-| Endpoint | Método | Descripción |
-|----------|--------|-------------|
-| `/api/packages` | GET | Listar paquetes |
-| `/api/packages` | POST | Crear paquete |
-| `/api/packages/{id}` | GET | Ver paquete |
-| `/api/packages/{id}` | PUT | Actualizar paquete |
-| `/api/packages/{id}` | DELETE | Eliminar paquete |
-
-### Gestión de Lockers (Portal Admin)
-| Endpoint | Método | Descripción |
-|----------|--------|-------------|
-| `/api/lockers` | GET | Listar lockers |
-| `/api/lockers/{id}` | GET | Ver locker |
-| `/api/lockers/{id}/compartments` | GET | Ver compartimentos |
-| `/api/lockers/{id}/status` | GET | Ver estado |
-
-### Depósitos (Portal Admin)
-| Endpoint | Método | Descripción |
-|----------|--------|-------------|
-| `/api/deposits` | GET | Listar depósitos |
+| `/api/deposits` | POST | Registrar depósito |
 
 ### Utilidades (Solo desarrollo)
 | Endpoint | Método | Descripción |
@@ -121,16 +97,11 @@ const couriers = await api('/api/couriers')
 
 ### Portal Admin (Nuxt)
 - [x] Login funciona
-- [ ] Agregar token a todas las llamadas de couriers
-- [ ] Agregar token a todas las llamadas de recipients
-- [ ] Agregar token a todas las llamadas de packages
-- [ ] Agregar token a todas las llamadas de lockers
-- [ ] Agregar token a todas las llamadas de deposits
+- [ ] Token incluido en todas las llamadas (composable useApi)
 
 ### App Móvil Courier
-- ✅ No requiere cambios (endpoints públicos)
-- `/api/packages/validate` - Público
-- `/api/deposits` - Público
+- [ ] Login courier funciona
+- [ ] Token incluido en POST /api/deposits
 
 ### Locker Físico
 - ✅ No requiere cambios (endpoints públicos)

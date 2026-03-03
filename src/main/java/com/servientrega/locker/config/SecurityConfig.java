@@ -40,7 +40,6 @@ public class SecurityConfig {
                     "/api/health",
                     "/api/qr/**",
                     "/api/packages/validate",
-                    "/api/deposits",
                     "/api/retrievals/validate",
                     "/api/retrievals",
                     "/api/lockers/status-update",
@@ -49,6 +48,8 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/v3/api-docs"
                 ).permitAll()
+                .requestMatchers("/api/deposits").hasAnyRole("ADMIN", "COURIER")
+                .requestMatchers("/api/couriers/**", "/api/recipients/**", "/api/packages/**", "/api/lockers/**", "/api/util/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
