@@ -3,6 +3,7 @@ package com.servientrega.locker.security;
 import com.servientrega.locker.repository.AdminRepository;
 import com.servientrega.locker.repository.CourierRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
+@Primary
 @RequiredArgsConstructor
 public class UnifiedUserDetailsService implements UserDetailsService {
 
