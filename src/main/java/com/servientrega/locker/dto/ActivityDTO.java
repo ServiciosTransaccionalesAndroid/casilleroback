@@ -24,7 +24,6 @@ public class ActivityDTO {
         String recipientPhone,
         Integer compartmentNumber,
         String lockerName,
-        LocalDateTime retrievalTimestamp,
-        Boolean verified
+        LocalDateTime retrievalTimestamp
     ) {}
 }

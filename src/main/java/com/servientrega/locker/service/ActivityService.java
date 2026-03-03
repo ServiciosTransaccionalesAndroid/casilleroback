@@ -65,8 +65,7 @@ public class ActivityService {
             r.getDeposit().getPackageEntity().getRecipientPhone(),
             r.getDeposit().getCompartment().getCompartmentNumber(),
             r.getDeposit().getCompartment().getLocker().getName(),
-            r.getRetrievalTimestamp(),
-            r.getVerified()
+            r.getRetrievalTimestamp()
         );
     }
 }
