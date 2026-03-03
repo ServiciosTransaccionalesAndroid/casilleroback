@@ -161,3 +161,42 @@ Después del deploy, podrás:
 - ✅ Login con diferentes usuarios y PINs
 - ✅ Validación de formato de PIN
 - ✅ Mensajes de error claros
+
+
+---
+
+## 🐳 Error de Docker: TLS Handshake Timeout
+
+### Síntoma
+```
+ERROR: failed to resolve source metadata for docker.io/library/eclipse-temurin
+TLS handshake timeout
+```
+
+### Causa
+Railway tiene problemas temporales conectándose a Docker Hub.
+
+### Solución 1: Reintentar Deploy
+1. Ve a **Deployments** en Railway
+2. Click en **"Redeploy"** en el deployment fallido
+3. Espera 2-3 minutos
+
+### Solución 2: Dockerfile Actualizado
+Ya se actualizó el Dockerfile para usar `maven:3.9-eclipse-temurin-17-alpine` que es más confiable.
+
+### Solución 3: Usar Amazon Corretto (Alternativa)
+Si persiste el error, cambia el Dockerfile:
+
+```bash
+# Renombrar archivos
+mv Dockerfile Dockerfile.backup
+mv Dockerfile.corretto Dockerfile
+
+# Commit y push
+git add .
+git commit -m "fix: usar Amazon Corretto como imagen base"
+git push origin main
+```
+
+### Solución 4: Esperar y Reintentar
+A veces es un problema temporal de Docker Hub. Espera 10-15 minutos y reintenta.
