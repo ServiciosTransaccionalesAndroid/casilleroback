@@ -29,9 +29,9 @@ public class DepositService {
     private final com.servientrega.locker.repository.CompartmentRepository compartmentRepository;
 
     @Transactional
-    public DepositResult processDeposit(String trackingNumber, Long lockerId, Integer compartmentNumber, String courierEmployeeId, String photoUrl) {
-        log.info("Processing deposit - Tracking: {}, Locker: {}, Compartment: {}, Courier: {}", 
-            trackingNumber, lockerId, compartmentNumber, courierEmployeeId);
+    public DepositResult processDeposit(String trackingNumber, Long lockerId, String courierEmployeeId, String photoUrl) {
+        log.info("Processing deposit - Tracking: {}, Locker: {}, Courier: {}", 
+            trackingNumber, lockerId, courierEmployeeId);
 
         com.servientrega.locker.entity.Package packageEntity = packageService.validatePackage(trackingNumber);
         if (packageEntity == null) {
@@ -41,10 +41,19 @@ public class DepositService {
         Courier courier = courierRepository.findByEmployeeId(courierEmployeeId)
             .orElseThrow(() -> new RuntimeException("Courier not found: " + courierEmployeeId));
 
-        Compartment compartment = compartmentRepository.findByLockerIdAndCompartmentNumber(lockerId, compartmentNumber);
+        // Asignar compartimento automáticamente según dimensiones del paquete
+        Compartment compartment = compartmentService.assignCompartment(
+            lockerId, 
+            packageEntity.getWidth(), 
+            packageEntity.getHeight(), 
+            packageEntity.getDepth()
+        );
+        
         if (compartment == null) {
-            throw new RuntimeException("Compartment not found: Locker " + lockerId + ", Number " + compartmentNumber);
+            throw new RuntimeException("No available compartment for package size");
         }
+        
+        log.info("Assigned compartment #{} (ID: {})", compartment.getCompartmentNumber(), compartment.getId());
 
         Deposit deposit = new Deposit();
         deposit.setPackageEntity(packageEntity);
@@ -85,14 +94,17 @@ public class DepositService {
             compartment.getLocker().getAddress()
         );
 
-        log.info("Deposit processed successfully - Code: {}", retrievalCode.getCode());
+        log.info("Deposit processed successfully - Compartment: #{}, Code: {}", 
+            compartment.getCompartmentNumber(), retrievalCode.getCode());
+        
         return new DepositResult(
-            savedDeposit.getId(), 
+            savedDeposit.getId(),
+            compartment.getCompartmentNumber(),
             retrievalCode.getCode(), 
             retrievalCode.getSecretPin(),
             retrievalCode.getExpiresAt()
         );
     }
 
-    public record DepositResult(Long depositId, String retrievalCode, String secretPin, LocalDateTime expiresAt) {}
+    public record DepositResult(Long depositId, Integer compartmentNumber, String retrievalCode, String secretPin, LocalDateTime expiresAt) {}
 }

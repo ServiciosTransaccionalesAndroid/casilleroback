@@ -14,9 +14,6 @@ public class DepositDTO {
         @NotNull(message = "Locker ID is required")
         Long lockerId,
         
-        @NotNull(message = "Compartment number is required")
-        Integer compartmentNumber,
-        
         @NotBlank(message = "Courier employee ID is required")
         String courierEmployeeId,
         
@@ -25,6 +22,7 @@ public class DepositDTO {
 
     public record DepositResponse(
         Long depositId,
+        Integer compartmentNumber,
         String retrievalCode,
         String secretPin,
         LocalDateTime expiresAt,

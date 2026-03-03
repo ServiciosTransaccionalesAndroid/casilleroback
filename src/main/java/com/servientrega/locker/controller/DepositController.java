@@ -25,17 +25,17 @@ public class DepositController {
         DepositService.DepositResult result = depositService.processDeposit(
             request.trackingNumber(),
             request.lockerId(),
-            request.compartmentNumber(),
             request.courierEmployeeId(),
             request.photoUrl()
         );
 
         DepositDTO.DepositResponse response = new DepositDTO.DepositResponse(
             result.depositId(),
+            result.compartmentNumber(),
             result.retrievalCode(),
             result.secretPin(),
             result.expiresAt(),
-            "Deposit registered successfully. Retrieval code: " + result.retrievalCode() + " - Secret PIN: " + result.secretPin()
+            "Deposit registered successfully. Use compartment #" + result.compartmentNumber() + ". Retrieval code: " + result.retrievalCode()
         );
 
         return ResponseEntity.ok(response);
