@@ -3,6 +3,7 @@ package com.servientrega.locker.service;
 import com.servientrega.locker.dto.PackageDTO;
 import com.servientrega.locker.entity.Package;
 import com.servientrega.locker.entity.Recipient;
+import com.servientrega.locker.enums.PackageStatus;
 import com.servientrega.locker.repository.PackageRepository;
 import com.servientrega.locker.repository.RecipientRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class PackageService {
         pkg.setHeight(request.height());
         pkg.setDepth(request.depth());
         pkg.setWeight(request.weight());
-        pkg.setStatus("EN_TRANSITO");
+        pkg.setStatus(PackageStatus.EN_TRANSITO);
 
         Package saved = packageRepository.save(pkg);
         return toResponse(saved, recipient);
@@ -61,7 +62,7 @@ public class PackageService {
         if (request.height() != null) pkg.setHeight(request.height());
         if (request.depth() != null) pkg.setDepth(request.depth());
         if (request.weight() != null) pkg.setWeight(request.weight());
-        if (request.status() != null) pkg.setStatus(request.status());
+        if (request.status() != null) pkg.setStatus(PackageStatus.valueOf(request.status()));
 
         Package updated = packageRepository.save(pkg);
         Recipient recipient = recipientRepository.findByPhone(updated.getRecipientPhone()).orElse(null);
@@ -100,7 +101,19 @@ public class PackageService {
             pkg.getHeight(),
             pkg.getDepth(),
             pkg.getWeight(),
-            pkg.getStatus()
+            pkg.getStatus().name()
         );
+    }
+
+    public Package validatePackage(String trackingNumber) {
+        return packageRepository.findByTrackingNumber(trackingNumber)
+            .orElseThrow(() -> new RuntimeException("Package not found: " + trackingNumber));
+    }
+
+    @Transactional
+    public void updatePackageStatus(String trackingNumber, PackageStatus status) {
+        Package pkg = validatePackage(trackingNumber);
+        pkg.setStatus(status);
+        packageRepository.save(pkg);
     }
 }
