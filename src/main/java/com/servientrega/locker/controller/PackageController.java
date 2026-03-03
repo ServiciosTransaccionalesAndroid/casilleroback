@@ -54,4 +54,14 @@ public class PackageController {
         packageService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/validate")
+    @Operation(summary = "Validate package", description = "Validate package by tracking number")
+    public ResponseEntity<PackageDTO.PackageResponse> validate(
+            @RequestParam String trackingNumber) {
+        PackageDTO.PackageResponse response = packageService.getById(
+            packageService.validatePackage(trackingNumber).getId()
+        );
+        return ResponseEntity.ok(response);
+    }
 }
