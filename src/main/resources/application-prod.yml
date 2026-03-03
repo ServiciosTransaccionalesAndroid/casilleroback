@@ -1,6 +1,15 @@
 spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/locker_db}
+    username: ${DATABASE_USERNAME:locker_user}
+    password: ${DATABASE_PASSWORD:locker_pass}
   jpa:
     show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+server:
+  port: ${PORT:8080}
 
 logging:
   level:
