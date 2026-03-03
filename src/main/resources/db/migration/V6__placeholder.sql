@@ -1,0 +1,3 @@
+-- V6__placeholder.sql
+-- Placeholder para evitar error de Flyway
+-- Esta migración fue removida, los cambios se aplican manualmente o via API
