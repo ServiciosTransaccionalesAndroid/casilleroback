@@ -40,6 +40,7 @@ public class SecurityConfig {
                     "/api/auth/**",
                     "/api/health",
                     "/api/dev/**",
+                    "/api/couriers/**",
                     "/api/qr/**",
                     "/api/packages/validate",
                     "/api/retrievals/validate",
