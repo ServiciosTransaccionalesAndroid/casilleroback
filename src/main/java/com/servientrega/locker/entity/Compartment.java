@@ -2,6 +2,8 @@ package com.servientrega.locker.entity;
 
 import com.servientrega.locker.enums.CompartmentSize;
 import com.servientrega.locker.enums.CompartmentStatus;
+import com.servientrega.locker.enums.DoorState;
+import com.servientrega.locker.enums.PhysicalCondition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +39,14 @@ public class Compartment {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private CompartmentStatus status;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "door_state", nullable = false, length = 20)
+    private DoorState doorState;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "physical_condition", nullable = false, length = 30)
+    private PhysicalCondition physicalCondition;
     
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "sensor_readings", columnDefinition = "jsonb")
