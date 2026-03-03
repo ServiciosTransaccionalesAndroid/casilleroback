@@ -14,11 +14,11 @@ public class DepositDTO {
         @NotNull(message = "Locker ID is required")
         Long lockerId,
         
-        @NotNull(message = "Compartment ID is required")
-        Long compartmentId,
+        @NotNull(message = "Compartment number is required")
+        Integer compartmentNumber,
         
-        @NotNull(message = "Courier ID is required")
-        Long courierId,
+        @NotBlank(message = "Courier employee ID is required")
+        String courierEmployeeId,
         
         String photoUrl
     ) {}

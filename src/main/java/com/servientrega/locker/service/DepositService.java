@@ -26,24 +26,25 @@ public class DepositService {
     private final NotificationService notificationService;
     private final EmailService emailService;
     private final OperationLogService operationLogService;
+    private final com.servientrega.locker.repository.CompartmentRepository compartmentRepository;
 
     @Transactional
-    public DepositResult processDeposit(String trackingNumber, Long compartmentId, Long courierId, String photoUrl) {
-        log.info("Processing deposit - Tracking: {}, Compartment: {}, Courier: {}", 
-            trackingNumber, compartmentId, courierId);
+    public DepositResult processDeposit(String trackingNumber, Long lockerId, Integer compartmentNumber, String courierEmployeeId, String photoUrl) {
+        log.info("Processing deposit - Tracking: {}, Locker: {}, Compartment: {}, Courier: {}", 
+            trackingNumber, lockerId, compartmentNumber, courierEmployeeId);
 
         com.servientrega.locker.entity.Package packageEntity = packageService.validatePackage(trackingNumber);
         if (packageEntity == null) {
             throw new RuntimeException("Package not found: " + trackingNumber);
         }
 
-        Courier courier = courierRepository.findById(courierId)
-            .orElseThrow(() -> new RuntimeException("Courier not found: " + courierId));
+        Courier courier = courierRepository.findByEmployeeId(courierEmployeeId)
+            .orElseThrow(() -> new RuntimeException("Courier not found: " + courierEmployeeId));
 
-        Compartment compartment = compartmentService.getCompartmentsByLocker(1L).stream()
-            .filter(c -> c.getId().equals(compartmentId))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Compartment not found: " + compartmentId));
+        Compartment compartment = compartmentRepository.findByLockerIdAndCompartmentNumber(lockerId, compartmentNumber);
+        if (compartment == null) {
+            throw new RuntimeException("Compartment not found: Locker " + lockerId + ", Number " + compartmentNumber);
+        }
 
         Deposit deposit = new Deposit();
         deposit.setPackageEntity(packageEntity);
@@ -61,7 +62,7 @@ public class DepositService {
         operationLogService.logDeposit(savedDeposit, courier);
         operationLogService.logCodeGeneration(retrievalCode, savedDeposit);
 
-        compartmentService.updateCompartmentStatus(compartmentId, CompartmentStatus.OCUPADO);
+        compartmentService.updateCompartmentStatus(compartment.getId(), CompartmentStatus.OCUPADO);
         packageService.updatePackageStatus(trackingNumber, PackageStatus.EN_LOCKER);
 
         notificationService.sendRetrievalCodeNotification(

@@ -24,8 +24,9 @@ public class DepositController {
         
         DepositService.DepositResult result = depositService.processDeposit(
             request.trackingNumber(),
-            request.compartmentId(),
-            request.courierId(),
+            request.lockerId(),
+            request.compartmentNumber(),
+            request.courierEmployeeId(),
             request.photoUrl()
         );
 

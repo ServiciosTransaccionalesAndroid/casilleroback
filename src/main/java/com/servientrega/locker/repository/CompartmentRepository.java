@@ -11,4 +11,5 @@ import java.util.List;
 public interface CompartmentRepository extends JpaRepository<Compartment, Long> {
     List<Compartment> findByLockerIdAndStatus(Long lockerId, CompartmentStatus status);
     List<Compartment> findByLockerId(Long lockerId);
+    Compartment findByLockerIdAndCompartmentNumber(Long lockerId, Integer compartmentNumber);
 }
