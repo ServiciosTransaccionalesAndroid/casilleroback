@@ -2,12 +2,12 @@
 -- Agregar estado de puerta y condición física a compartimentos
 
 ALTER TABLE compartments 
-ADD COLUMN door_state VARCHAR(20) NOT NULL DEFAULT 'CERRADO',
-ADD COLUMN physical_condition VARCHAR(30) NOT NULL DEFAULT 'BUEN_ESTADO';
+ADD COLUMN IF NOT EXISTS door_state VARCHAR(20) NOT NULL DEFAULT 'CERRADO',
+ADD COLUMN IF NOT EXISTS physical_condition VARCHAR(30) NOT NULL DEFAULT 'BUEN_ESTADO';
 
 -- Crear índices para consultas rápidas
-CREATE INDEX idx_compartments_door_state ON compartments(door_state);
-CREATE INDEX idx_compartments_physical_condition ON compartments(physical_condition);
+CREATE INDEX IF NOT EXISTS idx_compartments_door_state ON compartments(door_state);
+CREATE INDEX IF NOT EXISTS idx_compartments_physical_condition ON compartments(physical_condition);
 
 -- Comentarios
 COMMENT ON COLUMN compartments.door_state IS 'Estado de la puerta: CERRADO, ABIERTO';
