@@ -18,6 +18,9 @@ public class RetrievalDTO {
         @NotBlank(message = "Code is required")
         String code,
         
+        @NotBlank(message = "Secret PIN is required")
+        String secretPin,
+        
         String photoUrl
     ) {}
 

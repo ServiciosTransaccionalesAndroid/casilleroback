@@ -50,6 +50,7 @@ public class RetrievalController {
         
         RetrievalService.RetrievalResult result = retrievalService.processRetrieval(
             request.code(),
+            request.secretPin(),
             request.photoUrl()
         );
 

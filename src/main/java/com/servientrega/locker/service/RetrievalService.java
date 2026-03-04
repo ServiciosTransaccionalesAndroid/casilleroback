@@ -31,12 +31,18 @@ public class RetrievalService {
     }
 
     @Transactional
-    public RetrievalResult processRetrieval(String code, String photoUrl) {
+    public RetrievalResult processRetrieval(String code, String secretPin, String photoUrl) {
         log.info("Processing retrieval with code: {}", code);
 
         RetrievalCode retrievalCode = retrievalCodeService.validateCode(code);
         if (retrievalCode == null) {
             throw new RuntimeException("Invalid or expired retrieval code: " + code);
+        }
+
+        // Validar PIN secreto
+        if (!retrievalCodeService.validateSecretPin(code, secretPin)) {
+            log.warn("Invalid secret PIN for code: {}", code);
+            throw new RuntimeException("Invalid secret PIN");
         }
 
         Retrieval retrieval = new Retrieval();

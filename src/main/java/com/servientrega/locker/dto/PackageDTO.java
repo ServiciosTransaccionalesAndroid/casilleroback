@@ -18,7 +18,9 @@ public class PackageDTO {
         @Positive BigDecimal width,
         @Positive BigDecimal height,
         @Positive BigDecimal depth,
-        @Positive BigDecimal weight
+        @Positive BigDecimal weight,
+        
+        String description
     ) {}
 
     public record UpdateRequest(
@@ -27,6 +29,7 @@ public class PackageDTO {
         BigDecimal height,
         BigDecimal depth,
         BigDecimal weight,
+        String description,
         String status
     ) {}
 
@@ -38,6 +41,7 @@ public class PackageDTO {
         BigDecimal height,
         BigDecimal depth,
         BigDecimal weight,
+        String description,
         String status
     ) {}
 }

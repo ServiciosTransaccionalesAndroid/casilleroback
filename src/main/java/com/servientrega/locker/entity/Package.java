@@ -44,6 +44,9 @@ public class Package {
     @Column(precision = 10, scale = 2)
     private BigDecimal weight;
     
+    @Column(columnDefinition = "TEXT")
+    private String description;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private PackageStatus status;
