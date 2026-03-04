@@ -1,5 +1,6 @@
 package com.servientrega.locker.service;
 
+import com.servientrega.locker.dto.RetrievalDTO;
 import com.servientrega.locker.entity.Retrieval;
 import com.servientrega.locker.entity.RetrievalCode;
 import com.servientrega.locker.enums.CompartmentStatus;
