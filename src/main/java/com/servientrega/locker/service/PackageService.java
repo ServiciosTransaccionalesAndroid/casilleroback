@@ -42,6 +42,7 @@ public class PackageService {
         pkg.setHeight(request.height());
         pkg.setDepth(request.depth());
         pkg.setWeight(request.weight());
+        pkg.setDescription(request.description());
         pkg.setStatus(PackageStatus.EN_TRANSITO);
 
         Package saved = packageRepository.save(pkg);
@@ -65,6 +66,7 @@ public class PackageService {
         if (request.height() != null) pkg.setHeight(request.height());
         if (request.depth() != null) pkg.setDepth(request.depth());
         if (request.weight() != null) pkg.setWeight(request.weight());
+        if (request.description() != null) pkg.setDescription(request.description());
         if (request.status() != null) pkg.setStatus(PackageStatus.valueOf(request.status()));
 
         Package updated = packageRepository.save(pkg);
@@ -104,6 +106,7 @@ public class PackageService {
             pkg.getHeight(),
             pkg.getDepth(),
             pkg.getWeight(),
+            pkg.getDescription(),
             pkg.getStatus().name()
         );
     }
