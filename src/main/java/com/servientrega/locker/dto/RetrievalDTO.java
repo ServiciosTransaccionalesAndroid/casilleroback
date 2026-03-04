@@ -9,6 +9,7 @@ public class RetrievalDTO {
     public record RetrievalValidationResponse(
         boolean valid,
         Integer compartmentNumber,
+        String compartmentSize,
         String trackingNumber,
         LocalDateTime expiresAt,
         String message
@@ -35,6 +36,7 @@ public class RetrievalDTO {
         String secretPin,
         String trackingNumber,
         Integer compartmentNumber,
+        String compartmentSize,
         String lockerName,
         LocalDateTime expiresAt,
         boolean used

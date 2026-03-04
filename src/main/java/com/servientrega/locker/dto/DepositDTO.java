@@ -23,6 +23,7 @@ public class DepositDTO {
     public record DepositResponse(
         Long depositId,
         Integer compartmentNumber,
+        String compartmentSize,
         String retrievalCode,
         String secretPin,
         LocalDateTime expiresAt,

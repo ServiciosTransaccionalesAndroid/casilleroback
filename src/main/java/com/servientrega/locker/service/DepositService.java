@@ -100,11 +100,12 @@ public class DepositService {
         return new DepositResult(
             savedDeposit.getId(),
             compartment.getCompartmentNumber(),
+            compartment.getSize().name(),
             retrievalCode.getCode(), 
             retrievalCode.getSecretPin(),
             retrievalCode.getExpiresAt()
         );
     }
 
-    public record DepositResult(Long depositId, Integer compartmentNumber, String retrievalCode, String secretPin, LocalDateTime expiresAt) {}
+    public record DepositResult(Long depositId, Integer compartmentNumber, String compartmentSize, String retrievalCode, String secretPin, LocalDateTime expiresAt) {}
 }

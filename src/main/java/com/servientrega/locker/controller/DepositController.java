@@ -32,10 +32,11 @@ public class DepositController {
         DepositDTO.DepositResponse response = new DepositDTO.DepositResponse(
             result.depositId(),
             result.compartmentNumber(),
+            result.compartmentSize(),
             result.retrievalCode(),
             result.secretPin(),
             result.expiresAt(),
-            "Deposit registered successfully. Use compartment #" + result.compartmentNumber() + ". Retrieval code: " + result.retrievalCode()
+            "Deposit registered successfully. Use compartment #" + result.compartmentNumber() + " (" + result.compartmentSize() + "). Retrieval code: " + result.retrievalCode()
         );
 
         return ResponseEntity.ok(response);

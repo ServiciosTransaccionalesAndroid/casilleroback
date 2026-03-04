@@ -48,6 +48,15 @@ public class Compartment {
     @Column(name = "physical_condition", nullable = false, length = 30)
     private PhysicalCondition physicalCondition;
     
+    @Column(precision = 10, scale = 2)
+    private java.math.BigDecimal width;
+    
+    @Column(precision = 10, scale = 2)
+    private java.math.BigDecimal height;
+    
+    @Column(precision = 10, scale = 2)
+    private java.math.BigDecimal depth;
+    
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "sensor_readings", columnDefinition = "jsonb")
     private Map<String, Object> sensorReadings;

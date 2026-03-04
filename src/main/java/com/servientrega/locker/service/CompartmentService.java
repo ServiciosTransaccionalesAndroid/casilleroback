@@ -54,9 +54,11 @@ public class CompartmentService {
     private CompartmentSize calculateRequiredSize(BigDecimal width, BigDecimal height, BigDecimal depth) {
         BigDecimal maxDimension = width.max(height).max(depth);
         
-        if (maxDimension.compareTo(new BigDecimal("25")) <= 0) {
-            return CompartmentSize.SMALL;
-        } else if (maxDimension.compareTo(new BigDecimal("40")) <= 0) {
+        if (maxDimension.compareTo(new BigDecimal("10")) <= 0) {
+            return CompartmentSize.S_SMALL;
+        } else if (maxDimension.compareTo(new BigDecimal("15")) <= 0) {
+            return CompartmentSize.M_SMALL;
+        } else if (maxDimension.compareTo(new BigDecimal("25")) <= 0) {
             return CompartmentSize.MEDIUM;
         } else {
             return CompartmentSize.LARGE;
@@ -71,9 +73,10 @@ public class CompartmentService {
 
     private int getSizeOrder(CompartmentSize size) {
         return switch (size) {
-            case SMALL -> 1;
-            case MEDIUM -> 2;
-            case LARGE -> 3;
+            case S_SMALL -> 1;
+            case M_SMALL -> 2;
+            case MEDIUM -> 3;
+            case LARGE -> 4;
         };
     }
 

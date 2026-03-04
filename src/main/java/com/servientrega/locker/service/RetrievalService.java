@@ -41,6 +41,7 @@ public class RetrievalService {
             retrievalCode.getSecretPin(),
             trackingNumber,
             retrievalCode.getDeposit().getCompartment().getCompartmentNumber(),
+            retrievalCode.getDeposit().getCompartment().getSize().name(),
             retrievalCode.getDeposit().getCompartment().getLocker().getName(),
             retrievalCode.getExpiresAt(),
             retrievalCode.getUsed()

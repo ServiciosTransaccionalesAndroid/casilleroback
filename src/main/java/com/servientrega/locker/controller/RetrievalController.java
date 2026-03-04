@@ -27,7 +27,7 @@ public class RetrievalController {
         
         if (retrievalCode == null) {
             RetrievalDTO.RetrievalValidationResponse response = new RetrievalDTO.RetrievalValidationResponse(
-                false, null, null, null, "Invalid, expired, or already used code"
+                false, null, null, null, null, "Invalid, expired, or already used code"
             );
             return ResponseEntity.ok(response);
         }
@@ -35,6 +35,7 @@ public class RetrievalController {
         RetrievalDTO.RetrievalValidationResponse response = new RetrievalDTO.RetrievalValidationResponse(
             true,
             retrievalCode.getDeposit().getCompartment().getCompartmentNumber(),
+            retrievalCode.getDeposit().getCompartment().getSize().name(),
             retrievalCode.getDeposit().getPackageEntity().getTrackingNumber(),
             retrievalCode.getExpiresAt(),
             "Code is valid"
