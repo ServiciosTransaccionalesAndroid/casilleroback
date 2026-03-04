@@ -65,6 +65,13 @@ public class PackageController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{trackingNumber}/details")
+    @Operation(summary = "Get package full details", description = "Get complete package information including deposit and retrieval")
+    public ResponseEntity<com.servientrega.locker.dto.PackageDetailDTO.PackageFullDetail> getPackageDetails(
+            @PathVariable String trackingNumber) {
+        return ResponseEntity.ok(packageService.getPackageFullDetails(trackingNumber));
+    }
+
     @PostMapping("/{trackingNumber}/resend-code")
     @Operation(summary = "Resend retrieval code", description = "Resend retrieval code email to recipient")
     public ResponseEntity<String> resendRetrievalCode(@PathVariable String trackingNumber) {

@@ -91,6 +91,8 @@ public class RetrievalCodeService {
             return null;
         }
 
+        // Comentado: No validar expiración
+        /*
         if (LocalDateTime.now().isAfter(retrievalCode.getExpiresAt())) {
             log.warn("Retrieval code expired: {}", code);
             
@@ -109,6 +111,7 @@ public class RetrievalCodeService {
             );
             return null;
         }
+        */
 
         // Registrar validación exitosa
         java.util.Map<String, Object> metadata = new java.util.HashMap<>();

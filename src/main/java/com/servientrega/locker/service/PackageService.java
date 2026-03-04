@@ -23,6 +23,7 @@ public class PackageService {
     private final EmailService emailService;
     private final com.servientrega.locker.repository.RetrievalCodeRepository retrievalCodeRepository;
     private final com.servientrega.locker.repository.DepositRepository depositRepository;
+    private final com.servientrega.locker.repository.RetrievalRepository retrievalRepository;
 
     @Transactional
     public PackageDTO.PackageResponse create(PackageDTO.CreateRequest request) {
@@ -146,6 +147,69 @@ public class PackageService {
             trackingNumber,
             deposit.getCompartment().getLocker().getName(),
             deposit.getCompartment().getLocker().getAddress()
+        );
+    }
+
+    public com.servientrega.locker.dto.PackageDetailDTO.PackageFullDetail getPackageFullDetails(String trackingNumber) {
+        Package pkg = validatePackage(trackingNumber);
+        
+        // Buscar depósito
+        com.servientrega.locker.dto.PackageDetailDTO.DepositInfo depositInfo = null;
+        var depositOpt = depositRepository.findByPackageEntityId(pkg.getId());
+        if (depositOpt.isPresent()) {
+            var deposit = depositOpt.get();
+            var retrievalCodeOpt = retrievalCodeRepository.findAll().stream()
+                .filter(rc -> rc.getDeposit().getId().equals(deposit.getId()))
+                .findFirst();
+            
+            if (retrievalCodeOpt.isPresent()) {
+                var code = retrievalCodeOpt.get();
+                depositInfo = new com.servientrega.locker.dto.PackageDetailDTO.DepositInfo(
+                    deposit.getId(),
+                    deposit.getCourier().getName(),
+                    deposit.getCourier().getEmployeeId(),
+                    deposit.getCompartment().getCompartmentNumber(),
+                    deposit.getCompartment().getSize().name(),
+                    deposit.getCompartment().getLocker().getName(),
+                    deposit.getCompartment().getLocker().getAddress(),
+                    deposit.getDepositTimestamp(),
+                    code.getCode(),
+                    code.getSecretPin(),
+                    code.getExpiresAt(),
+                    code.getUsed()
+                );
+            }
+        }
+        
+        // Buscar retiro
+        com.servientrega.locker.dto.PackageDetailDTO.RetrievalInfo retrievalInfo = null;
+        if (depositOpt.isPresent()) {
+            var retrievalOpt = retrievalRepository.findByDepositId(depositOpt.get().getId());
+            if (retrievalOpt.isPresent()) {
+                var retrieval = retrievalOpt.get();
+                retrievalInfo = new com.servientrega.locker.dto.PackageDetailDTO.RetrievalInfo(
+                    retrieval.getId(),
+                    retrieval.getRetrievalTimestamp(),
+                    retrieval.getRetrievalCode().getCode()
+                );
+            }
+        }
+        
+        return new com.servientrega.locker.dto.PackageDetailDTO.PackageFullDetail(
+            pkg.getId(),
+            pkg.getTrackingNumber(),
+            pkg.getRecipientName(),
+            pkg.getRecipientPhone(),
+            pkg.getRecipientEmail(),
+            pkg.getWidth(),
+            pkg.getHeight(),
+            pkg.getDepth(),
+            pkg.getWeight(),
+            pkg.getDescription(),
+            pkg.getStatus().name(),
+            pkg.getCreatedAt(),
+            depositInfo,
+            retrievalInfo
         );
     }
 }
