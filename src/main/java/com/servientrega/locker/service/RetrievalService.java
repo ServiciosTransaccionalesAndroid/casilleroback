@@ -30,6 +30,22 @@ public class RetrievalService {
         return retrievalCodeService.validateCode(code);
     }
 
+    public RetrievalDTO.RetrievalCodeInfo getRetrievalCodeInfo(String trackingNumber) {
+        log.info("Getting retrieval code info for tracking: {}", trackingNumber);
+        
+        RetrievalCode retrievalCode = retrievalCodeService.getActiveCodeByTrackingNumber(trackingNumber);
+        
+        return new RetrievalDTO.RetrievalCodeInfo(
+            retrievalCode.getCode(),
+            retrievalCode.getSecretPin(),
+            trackingNumber,
+            retrievalCode.getDeposit().getCompartment().getCompartmentNumber(),
+            retrievalCode.getDeposit().getCompartment().getLocker().getName(),
+            retrievalCode.getExpiresAt(),
+            retrievalCode.getUsed()
+        );
+    }
+
     @Transactional
     public RetrievalResult processRetrieval(String code, String secretPin, String photoUrl) {
         log.info("Processing retrieval with code: {}", code);

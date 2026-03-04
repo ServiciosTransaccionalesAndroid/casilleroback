@@ -29,4 +29,14 @@ public class RetrievalDTO {
         LocalDateTime timestamp,
         String message
     ) {}
+
+    public record RetrievalCodeInfo(
+        String code,
+        String secretPin,
+        String trackingNumber,
+        Integer compartmentNumber,
+        String lockerName,
+        LocalDateTime expiresAt,
+        boolean used
+    ) {}
 }

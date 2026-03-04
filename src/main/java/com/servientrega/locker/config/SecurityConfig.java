@@ -44,6 +44,7 @@ public class SecurityConfig {
                     "/api/deposits",
                     "/api/compartments/**",
                     "/api/retrievals/validate",
+                    "/api/retrievals/info",
                     "/api/retrievals",
                     "/api/lockers/status-update",
                     "/swagger-ui/**",

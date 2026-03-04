@@ -43,6 +43,15 @@ public class RetrievalController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/info")
+    @Operation(summary = "Get retrieval code info", description = "Get retrieval code and PIN by tracking number")
+    public ResponseEntity<RetrievalDTO.RetrievalCodeInfo> getRetrievalCodeInfo(
+            @RequestParam String trackingNumber) {
+        
+        RetrievalDTO.RetrievalCodeInfo info = retrievalService.getRetrievalCodeInfo(trackingNumber);
+        return ResponseEntity.ok(info);
+    }
+
     @PostMapping
     @Operation(summary = "Process retrieval", description = "Processes a package retrieval")
     public ResponseEntity<RetrievalDTO.RetrievalResponse> processRetrieval(

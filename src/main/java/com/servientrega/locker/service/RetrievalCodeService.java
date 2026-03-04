@@ -155,4 +155,10 @@ public class RetrievalCodeService {
         
         log.info("Retrieval code marked as used: {}", code);
     }
+
+    public RetrievalCode getActiveCodeByTrackingNumber(String trackingNumber) {
+        log.info("Getting active code for tracking: {}", trackingNumber);
+        return retrievalCodeRepository.findActiveByTrackingNumber(trackingNumber)
+            .orElseThrow(() -> new RuntimeException("No active retrieval code found for tracking: " + trackingNumber));
+    }
 }
