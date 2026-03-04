@@ -29,56 +29,31 @@ public class CompartmentService {
     public Compartment assignCompartment(Long lockerId, BigDecimal width, BigDecimal height, BigDecimal depth) {
         log.info("Assigning compartment for package dimensions: {}x{}x{}", width, height, depth);
         
-        CompartmentSize requiredSize = calculateRequiredSize(width, height, depth);
-        log.info("Required compartment size: {}", requiredSize);
-        
         List<Compartment> availableCompartments = findAvailableCompartments(lockerId);
         
-        Compartment assigned = availableCompartments.stream()
-            .filter(c -> c.getSize() == requiredSize)
-            .findFirst()
-            .orElseGet(() -> availableCompartments.stream()
-                .filter(c -> isLargerSize(c.getSize(), requiredSize))
-                .findFirst()
-                .orElse(null));
-        
-        if (assigned != null) {
-            log.info("Compartment assigned: {} (Size: {})", assigned.getId(), assigned.getSize());
-        } else {
-            log.warn("No available compartment found for size: {}", requiredSize);
+        // Intentar asignar en orden: S_SMALL -> M_SMALL -> MEDIUM -> LARGE
+        for (CompartmentSize size : CompartmentSize.values()) {
+            if (size.canFit(width, height, depth)) {
+                log.info("Package fits in size: {}", size);
+                
+                Compartment assigned = availableCompartments.stream()
+                    .filter(c -> c.getSize() == size)
+                    .findFirst()
+                    .orElse(null);
+                
+                if (assigned != null) {
+                    log.info("Compartment assigned: {} (Size: {})", assigned.getId(), assigned.getSize());
+                    return assigned;
+                }
+                
+                log.info("No available compartment of size {}, trying next size", size);
+            }
         }
         
-        return assigned;
+        log.warn("No available compartment found for package dimensions: {}x{}x{}", width, height, depth);
+        return null;
     }
 
-    private CompartmentSize calculateRequiredSize(BigDecimal width, BigDecimal height, BigDecimal depth) {
-        BigDecimal maxDimension = width.max(height).max(depth);
-        
-        if (maxDimension.compareTo(new BigDecimal("10")) <= 0) {
-            return CompartmentSize.S_SMALL;
-        } else if (maxDimension.compareTo(new BigDecimal("15")) <= 0) {
-            return CompartmentSize.M_SMALL;
-        } else if (maxDimension.compareTo(new BigDecimal("25")) <= 0) {
-            return CompartmentSize.MEDIUM;
-        } else {
-            return CompartmentSize.LARGE;
-        }
-    }
-
-    private boolean isLargerSize(CompartmentSize compartmentSize, CompartmentSize requiredSize) {
-        int compartmentOrder = getSizeOrder(compartmentSize);
-        int requiredOrder = getSizeOrder(requiredSize);
-        return compartmentOrder > requiredOrder;
-    }
-
-    private int getSizeOrder(CompartmentSize size) {
-        return switch (size) {
-            case S_SMALL -> 1;
-            case M_SMALL -> 2;
-            case MEDIUM -> 3;
-            case LARGE -> 4;
-        };
-    }
 
     @Transactional
     public void updateCompartmentStatus(Long compartmentId, CompartmentStatus status) {
