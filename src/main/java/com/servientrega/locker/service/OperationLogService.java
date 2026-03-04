@@ -54,12 +54,14 @@ public class OperationLogService {
         metadata.put("trackingNumber", deposit.getPackageEntity().getTrackingNumber());
         metadata.put("compartmentId", deposit.getCompartment().getId());
         metadata.put("compartmentNumber", deposit.getCompartment().getCompartmentNumber());
+        metadata.put("compartmentSize", deposit.getCompartment().getSize().name());
         metadata.put("lockerId", deposit.getCompartment().getLocker().getId());
         metadata.put("lockerName", deposit.getCompartment().getLocker().getName());
         
-        String description = String.format("Paquete %s depositado en compartimento %d del %s por %s",
+        String description = String.format("Paquete %s depositado en compartimento %d (%s) del %s por %s",
             deposit.getPackageEntity().getTrackingNumber(),
             deposit.getCompartment().getCompartmentNumber(),
+            deposit.getCompartment().getSize().name(),
             deposit.getCompartment().getLocker().getName(),
             courier.getName()
         );
@@ -83,10 +85,14 @@ public class OperationLogService {
         metadata.put("packageId", retrieval.getDeposit().getPackageEntity().getId());
         metadata.put("trackingNumber", retrieval.getDeposit().getPackageEntity().getTrackingNumber());
         metadata.put("code", retrieval.getRetrievalCode().getCode());
+        metadata.put("compartmentNumber", retrieval.getDeposit().getCompartment().getCompartmentNumber());
+        metadata.put("compartmentSize", retrieval.getDeposit().getCompartment().getSize().name());
         
-        String description = String.format("Paquete %s retirado exitosamente con código %s",
+        String description = String.format("Paquete %s retirado exitosamente con código %s del compartimento %d (%s)",
             retrieval.getDeposit().getPackageEntity().getTrackingNumber(),
-            retrieval.getRetrievalCode().getCode()
+            retrieval.getRetrievalCode().getCode(),
+            retrieval.getDeposit().getCompartment().getCompartmentNumber(),
+            retrieval.getDeposit().getCompartment().getSize().name()
         );
         
         logOperation(
