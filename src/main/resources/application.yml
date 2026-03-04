@@ -51,6 +51,8 @@ springdoc:
     enabled: true
     operationsSorter: method
     tagsSorter: alpha
+    disable-swagger-default-url: true
+    use-root-path: true
 
 logging:
   level:
