@@ -3,6 +3,9 @@ spring:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/locker_db}
     username: ${DATABASE_USERNAME:locker_user}
     password: ${DATABASE_PASSWORD:locker_pass}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
   jpa:
     show-sql: false
     hibernate:
@@ -12,6 +15,10 @@ spring:
 
 server:
   port: ${PORT:8080}
+  tomcat:
+    threads:
+      max: 50
+      min-spare: 10
 
 logging:
   level:

@@ -20,6 +20,9 @@ public class PackageService {
     private final PackageRepository packageRepository;
     private final RecipientRepository recipientRepository;
     private final RecipientService recipientService;
+    private final EmailService emailService;
+    private final com.servientrega.locker.repository.RetrievalCodeRepository retrievalCodeRepository;
+    private final com.servientrega.locker.repository.DepositRepository depositRepository;
 
     @Transactional
     public PackageDTO.PackageResponse create(PackageDTO.CreateRequest request) {
@@ -115,5 +118,31 @@ public class PackageService {
         Package pkg = validatePackage(trackingNumber);
         pkg.setStatus(status);
         packageRepository.save(pkg);
+    }
+
+    @Transactional
+    public void resendRetrievalCode(String trackingNumber) {
+        Package pkg = validatePackage(trackingNumber);
+        
+        if (pkg.getStatus() != PackageStatus.EN_LOCKER) {
+            throw new RuntimeException("Package is not in locker. Current status: " + pkg.getStatus());
+        }
+
+        com.servientrega.locker.entity.RetrievalCode retrievalCode = retrievalCodeRepository
+            .findActiveByTrackingNumber(trackingNumber)
+            .orElseThrow(() -> new RuntimeException("No active retrieval code found for package: " + trackingNumber));
+
+        com.servientrega.locker.entity.Deposit deposit = depositRepository
+            .findByPackageEntityId(pkg.getId())
+            .orElseThrow(() -> new RuntimeException("Deposit not found for package: " + trackingNumber));
+
+        emailService.sendRetrievalCodeEmail(
+            retrievalCode,
+            pkg.getRecipientEmail(),
+            pkg.getRecipientName(),
+            trackingNumber,
+            deposit.getCompartment().getLocker().getName(),
+            deposit.getCompartment().getLocker().getAddress()
+        );
     }
 }

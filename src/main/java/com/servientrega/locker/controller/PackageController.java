@@ -64,4 +64,11 @@ public class PackageController {
         );
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/{trackingNumber}/resend-code")
+    @Operation(summary = "Resend retrieval code", description = "Resend retrieval code email to recipient")
+    public ResponseEntity<String> resendRetrievalCode(@PathVariable String trackingNumber) {
+        packageService.resendRetrievalCode(trackingNumber);
+        return ResponseEntity.ok("Retrieval code email sent successfully");
+    }
 }
