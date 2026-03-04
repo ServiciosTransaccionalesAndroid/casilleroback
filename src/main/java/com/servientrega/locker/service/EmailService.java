@@ -20,16 +20,24 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final QRCodeService qrCodeService;
+    
+    @Value("${spring.mail.username:quasar1035@gmail.com}")
+    private String fromEmail;
 
     @Async
     public void sendRetrievalCodeEmail(RetrievalCode retrievalCode, String recipientEmail, 
                                        String recipientName, String trackingNumber,
                                        String lockerName, String lockerAddress) {
         try {
+            if (recipientEmail == null || recipientEmail.isEmpty()) {
+                log.warn("No recipient email provided for tracking: {}", trackingNumber);
+                return;
+            }
+
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom("quasar1035@gmail.com");
+            helper.setFrom(fromEmail);
             helper.setTo(recipientEmail);
             helper.setSubject("📦 Tu paquete está listo para retirar - Servientrega");
 
@@ -45,15 +53,21 @@ public class EmailService {
 
             helper.setText(htmlContent, true);
 
-            // Generar y adjuntar QR
-            byte[] qrCode = qrCodeService.generateQRCode(retrievalCode.getCode(), 400, 400);
+            // Generar y adjuntar QR con JSON
+            byte[] qrCode = qrCodeService.generateQRCode(
+                retrievalCode.getCode(), 
+                retrievalCode.getSecretPin(),
+                trackingNumber
+            );
             helper.addAttachment("codigo-retiro-qr.png", new ByteArrayResource(qrCode));
 
             mailSender.send(message);
             log.info("Email sent successfully to {} for tracking: {}", recipientEmail, trackingNumber);
 
         } catch (Exception e) {
-            log.error("Error sending email for tracking {}: {}", trackingNumber, e.getMessage());
+            log.error("Error sending email for tracking {}: {}. Email notifications disabled.", 
+                trackingNumber, e.getMessage());
+            // No lanzar excepción - el sistema sigue funcionando sin email
         }
     }
 

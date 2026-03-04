@@ -8,7 +8,7 @@ public class RetrievalDTO {
 
     public record RetrievalValidationResponse(
         boolean valid,
-        Long compartmentId,
+        Integer compartmentNumber,
         String trackingNumber,
         LocalDateTime expiresAt,
         String message

@@ -34,7 +34,7 @@ public class RetrievalController {
 
         RetrievalDTO.RetrievalValidationResponse response = new RetrievalDTO.RetrievalValidationResponse(
             true,
-            retrievalCode.getDeposit().getCompartment().getId(),
+            retrievalCode.getDeposit().getCompartment().getCompartmentNumber(),
             retrievalCode.getDeposit().getPackageEntity().getTrackingNumber(),
             retrievalCode.getExpiresAt(),
             "Code is valid"
