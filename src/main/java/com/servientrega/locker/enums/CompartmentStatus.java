@@ -4,5 +4,6 @@ public enum CompartmentStatus {
     DISPONIBLE,
     OCUPADO,
     ABIERTO,
-    MANTENIMIENTO
+    MANTENIMIENTO,
+    FUERA_DE_SERVICIO
 }
