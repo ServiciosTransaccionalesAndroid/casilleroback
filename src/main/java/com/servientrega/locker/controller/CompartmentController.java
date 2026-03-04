@@ -49,6 +49,17 @@ public class CompartmentController {
         return ResponseEntity.ok("Door state updated to " + doorState);
     }
 
+    @PutMapping("/locker/{lockerId}/number/{compartmentNumber}/door-state")
+    @Operation(summary = "Actualizar estado de puerta por número", description = "Valores: CERRADO, ABIERTO")
+    public ResponseEntity<String> updateDoorStateByNumber(
+            @PathVariable Long lockerId,
+            @PathVariable Integer compartmentNumber,
+            @RequestBody CompartmentDTO.UpdateDoorStateRequest request) {
+        DoorState doorState = DoorState.valueOf(request.doorState());
+        compartmentService.updateDoorStateByNumber(lockerId, compartmentNumber, doorState);
+        return ResponseEntity.ok("Door state updated to " + doorState);
+    }
+
     @PutMapping("/{id}/physical-condition")
     @Operation(summary = "Actualizar condición física", 
                description = "Valores: BUEN_ESTADO, MAL_ESTADO, REQUIERE_MANTENIMIENTO")

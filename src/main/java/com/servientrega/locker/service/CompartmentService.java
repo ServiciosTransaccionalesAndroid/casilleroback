@@ -104,6 +104,16 @@ public class CompartmentService {
     }
 
     @Transactional
+    public void updateDoorStateByNumber(Long lockerId, Integer compartmentNumber, DoorState doorState) {
+        Compartment compartment = compartmentRepository.findByLockerIdAndCompartmentNumber(lockerId, compartmentNumber);
+        if (compartment == null) {
+            throw new RuntimeException("Compartment not found: Locker " + lockerId + ", Number " + compartmentNumber);
+        }
+        compartment.setDoorState(doorState);
+        compartmentRepository.save(compartment);
+    }
+
+    @Transactional
     public void updatePhysicalCondition(Long compartmentId, PhysicalCondition condition) {
         Compartment compartment = compartmentRepository.findById(compartmentId)
             .orElseThrow(() -> new RuntimeException("Compartment not found"));
