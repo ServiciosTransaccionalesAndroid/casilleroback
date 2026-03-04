@@ -30,6 +30,7 @@ public class CourierService {
         courier.setPhone(request.phone());
         courier.setEmail(request.email());
         courier.setPin(passwordEncoder.encode(request.pin()));
+        courier.setPlainPin(request.pin());  // Guardar PIN sin encriptar
         courier.setActive(true);
 
         Courier saved = courierRepository.save(courier);
@@ -44,7 +45,10 @@ public class CourierService {
         if (request.name() != null) courier.setName(request.name());
         if (request.phone() != null) courier.setPhone(request.phone());
         if (request.email() != null) courier.setEmail(request.email());
-        if (request.pin() != null) courier.setPin(passwordEncoder.encode(request.pin()));
+        if (request.pin() != null) {
+            courier.setPin(passwordEncoder.encode(request.pin()));
+            courier.setPlainPin(request.pin());  // Actualizar PIN sin encriptar
+        }
         if (request.active() != null) courier.setActive(request.active());
 
         Courier updated = courierRepository.save(courier);
@@ -77,6 +81,7 @@ public class CourierService {
             courier.getName(),
             courier.getPhone(),
             courier.getEmail(),
+            courier.getPlainPin(),  // Mostrar PIN sin encriptar
             courier.getActive()
         );
     }

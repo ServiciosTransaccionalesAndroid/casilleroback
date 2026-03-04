@@ -51,6 +51,7 @@ public class ActivityService {
             d.getCourier().getName(),
             d.getCourier().getEmployeeId(),
             d.getCompartment().getCompartmentNumber(),
+            d.getCompartment().getSize().name(),
             d.getCompartment().getLocker().getName(),
             d.getDepositTimestamp(),
             d.getPhotoUrl()

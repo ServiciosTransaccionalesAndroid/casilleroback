@@ -42,6 +42,7 @@ public class CourierDTO {
         String name,
         String phone,
         String email,
+        String pin,
         Boolean active
     ) {}
 }

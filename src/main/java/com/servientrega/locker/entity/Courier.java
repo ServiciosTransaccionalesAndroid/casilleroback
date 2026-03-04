@@ -33,6 +33,9 @@ public class Courier {
     @Column(nullable = false)
     private String pin;
     
+    @Column(name = "plain_pin", length = 10)
+    private String plainPin;
+    
     @Column(nullable = false)
     private Boolean active = true;
     

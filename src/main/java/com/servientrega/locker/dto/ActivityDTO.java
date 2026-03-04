@@ -12,6 +12,7 @@ public class ActivityDTO {
         String courierName,
         String courierEmployeeId,
         Integer compartmentNumber,
+        String compartmentSize,
         String lockerName,
         LocalDateTime depositTimestamp,
         String photoUrl
