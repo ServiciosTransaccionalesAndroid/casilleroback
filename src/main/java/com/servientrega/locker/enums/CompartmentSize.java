@@ -3,10 +3,11 @@ package com.servientrega.locker.enums;
 import java.math.BigDecimal;
 
 public enum CompartmentSize {
-    S_SMALL(new BigDecimal("33"), new BigDecimal("8"), new BigDecimal("45")),
-    M_SMALL(new BigDecimal("33"), new BigDecimal("12"), new BigDecimal("45")),
-    MEDIUM(new BigDecimal("33"), new BigDecimal("23"), new BigDecimal("45")),
-    LARGE(new BigDecimal("33"), new BigDecimal("30"), new BigDecimal("45"));
+    SMALL(new BigDecimal("33"), new BigDecimal("12"), new BigDecimal("45")),
+    MEDIUM(new BigDecimal("33"), new BigDecimal("18"), new BigDecimal("45")),
+    LARGE(new BigDecimal("33"), new BigDecimal("23"), new BigDecimal("45")),
+    EXTRA_LARGE(new BigDecimal("33"), new BigDecimal("40"), new BigDecimal("45")),
+    JUMBO(new BigDecimal("40"), new BigDecimal("49"), new BigDecimal("45"));
 
     private final BigDecimal width;
     private final BigDecimal height;
