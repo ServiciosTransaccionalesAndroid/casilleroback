@@ -25,7 +25,6 @@ public class DepositService {
     private final RetrievalCodeService retrievalCodeService;
     private final NotificationService notificationService;
     private final EmailService emailService;
-    private final ResendEmailService resendEmailService;
     private final OperationLogService operationLogService;
     private final com.servientrega.locker.repository.CompartmentRepository compartmentRepository;
 
