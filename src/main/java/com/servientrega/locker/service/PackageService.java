@@ -21,7 +21,6 @@ public class PackageService {
     private final RecipientRepository recipientRepository;
     private final RecipientService recipientService;
     private final EmailService emailService;
-    private final ResendEmailService resendEmailService;
     private final com.servientrega.locker.repository.RetrievalCodeRepository retrievalCodeRepository;
     private final com.servientrega.locker.repository.DepositRepository depositRepository;
     private final com.servientrega.locker.repository.RetrievalRepository retrievalRepository;
@@ -141,7 +140,7 @@ public class PackageService {
             .findByPackageEntityId(pkg.getId())
             .orElseThrow(() -> new RuntimeException("Deposit not found for package: " + trackingNumber));
 
-        resendEmailService.sendRetrievalCodeEmail(
+        emailService.sendRetrievalCodeEmail(
             retrievalCode,
             pkg.getRecipientEmail(),
             pkg.getRecipientName(),
