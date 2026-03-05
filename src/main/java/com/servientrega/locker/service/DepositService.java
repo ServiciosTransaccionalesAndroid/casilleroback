@@ -85,8 +85,8 @@ public class DepositService {
             retrievalCode.getExpiresAt()
         );
 
-        // Enviar correo con QR (usando Resend)
-        resendEmailService.sendRetrievalCodeEmail(
+        // Enviar correo con QR (usando Gmail SMTP)
+        emailService.sendRetrievalCodeEmail(
             retrievalCode,
             packageEntity.getRecipientEmail(),
             packageEntity.getRecipientName(),
