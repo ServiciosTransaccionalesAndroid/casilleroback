@@ -25,6 +25,7 @@ public class DepositService {
     private final RetrievalCodeService retrievalCodeService;
     private final NotificationService notificationService;
     private final EmailService emailService;
+    private final ResendEmailService resendEmailService;
     private final OperationLogService operationLogService;
     private final com.servientrega.locker.repository.CompartmentRepository compartmentRepository;
 
@@ -84,8 +85,8 @@ public class DepositService {
             retrievalCode.getExpiresAt()
         );
 
-        // Enviar correo con QR
-        emailService.sendRetrievalCodeEmail(
+        // Enviar correo con QR (usando Resend)
+        resendEmailService.sendRetrievalCodeEmail(
             retrievalCode,
             packageEntity.getRecipientEmail(),
             packageEntity.getRecipientName(),
