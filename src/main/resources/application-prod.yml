@@ -20,6 +20,13 @@ server:
       max: 50
       min-spare: 10
 
+resend:
+  api:
+    key: ${RESEND_API_KEY:}
+  from:
+    email: ${RESEND_FROM_EMAIL:quasar1035@gmail.com}
+    name: ${RESEND_FROM_NAME:Servientrega}
+
 logging:
   level:
     com.servientrega.locker: INFO

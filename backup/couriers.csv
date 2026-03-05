@@ -1,0 +1,6 @@
+id,employee_id,name,phone,email,pin,active,created_at,updated_at,plain_pin
+4,COUR004,Sandra López,+573301234567,sandra.lopez@servientrega.com,$2a$10$xJ3DJaoFeLB0.eHXfBIz4.VV1pkKh/8Ate3fnNhpauKuClY9QLN4K,t,2026-03-03 13:34:58.594851,2026-03-03 13:34:58.594851,1326
+3,COUR003,Luis Ramírez,+573201234567,luis.ramirez@servientrega.com,$2a$10$jlwSMVhXSuzzhgOL57XaZu0geAKpqqLDLnCd.4pgpIt9iMMGLOZDW,t,2026-03-03 13:34:58.594851,2026-03-04 17:43:34.300565,4466
+1,COUR001,Juan Pérez,+573001234567,juan.perez@servientrega.com,$2a$10$aeeIxYXNDS9sZRIGi98iYebXjrlDMTWEBn0wwpmEsbDWrpfP4EmTG,t,2026-03-03 13:29:15.455721,2026-03-04 17:44:20.32464,3500
+7,TEST999,Test User,445524241,prueba@gmail.com,$2a$10$ER3CqzEfV2IntSfZ2/F6V.DRQp1TNak4A2vdl4gRuKtqEwPScWuNq,t,2026-03-03 16:09:35.903334,2026-03-04 17:44:36.572064,5555
+2,COUR002,María González,+573007654321,maria.gonzalez@servientrega.com,$2a$10$Djgo/D.IrQwNCKMw.5/EGO9zDrxFuCmic6BlmTUKTigA7BTgBgEli,t,2026-03-03 13:29:15.455721,2026-03-04 23:23:51.443765,789456

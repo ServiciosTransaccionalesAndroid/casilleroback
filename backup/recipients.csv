@@ -1,0 +1,4 @@
+id,name,phone,email,address,created_at,updated_at
+2,Ana Martínez,+573109876543,quasar1035@gmail.com,"Carrera 45 #12-34, Bogotá",2026-03-03 19:35:09.71978,2026-03-05 02:32:40.717206
+3,Pedro Sánchez,+573105556677,quasar1035@gmail.com,"Avenida 68 #89-01, Bogotá",2026-03-03 19:35:09.71978,2026-03-05 02:46:59.179321
+1,Carlos Rodríguez,+573101234567,quasar1035@gmail.com,"Calle 123 #45-67, Bogotá",2026-03-03 19:35:09.71978,2026-03-05 02:47:04.231488

@@ -45,6 +45,8 @@ public class ResendEmailService {
                 return;
             }
 
+            log.info("Attempting to send email to: {} for tracking: {}", recipientEmail, trackingNumber);
+
             String htmlContent = buildEmailContent(
                 recipientName,
                 trackingNumber,
@@ -81,8 +83,8 @@ public class ResendEmailService {
             }
 
         } catch (Exception e) {
-            log.error("Error sending email via Resend for tracking {}: {}. Email notifications disabled.",
-                trackingNumber, e.getMessage());
+            log.error("Error sending email via Resend for tracking {} to {}: {}. Email notifications disabled.",
+                trackingNumber, recipientEmail, e.getMessage());
         }
     }
 

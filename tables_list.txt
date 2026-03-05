@@ -1,0 +1,18 @@
+                 List of relations
+ Schema |         Name          | Type  |  Owner   
+--------+-----------------------+-------+----------
+ public | admins                | table | postgres
+ public | alerts                | table | postgres
+ public | compartments          | table | postgres
+ public | couriers              | table | postgres
+ public | deposits              | table | postgres
+ public | flyway_schema_history | table | postgres
+ public | lockers               | table | postgres
+ public | operation_logs        | table | postgres
+ public | packages              | table | postgres
+ public | recipients            | table | postgres
+ public | retrieval_codes       | table | postgres
+ public | retrievals            | table | postgres
+ public | status_history        | table | postgres
+(13 rows)
+

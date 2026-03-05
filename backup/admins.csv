@@ -1,0 +1,2 @@
+id,email,name,password,role,active,created_at,updated_at
+1,admin@servientrega.com,Administrador Principal,$2a$10$MvorqsCCv.fB3lKmxgbH8OmlCoKhc.HbNBZY5ypEL08O9SW/NDTku,ADMIN,t,2026-03-03 19:35:09.58203,2026-03-03 19:35:09.58203
